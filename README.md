@@ -1,0 +1,1 @@
+coc-pretty-ts-errors
