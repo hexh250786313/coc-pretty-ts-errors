@@ -1,0 +1,72 @@
+{
+  "name": "coc-pretty-ts-errors",
+  "version": "0.0.1",
+  "description": "coc-pretty-ts-errors",
+  "main": "build/index.js",
+  "engines": {
+    "coc": "^0.0.82"
+  },
+  "keywords": [
+    "coc",
+    "coc.nvim",
+    "pretty-ts-errors"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:javascript.jsx",
+    "onLanguage:typescript",
+    "onLanguage:typescript.tsx",
+    "onLanguage:typescript.jsx",
+    "onLanguage:typescriptreact",
+    "onLanguage:jsx-tags",
+    "onLanguage:jsonc",
+    "onCommand:_typescript.configurePlugin",
+    "onCommand:tsserver.reloadProjects",
+    "onCommand:tsserver.goToProjectConfig",
+    "onCommand:tsserver.openTsServerLog",
+    "onCommand:tsserver.goToSourceDefinition",
+    "onCommand:tsserver.watchBuild"
+  ],
+  "scripts": {
+    "clean": "npx rimraf build",
+    "start": "npm i && NODE_ENV=development node esbuild.js --watch",
+    "build": "npm i && NODE_ENV=production node esbuild.js",
+    "prepare": "husky install && npm run clean"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,cjs,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,less,sass,scss}": [
+      "prettier --write"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hexh250786313/coc-pretty-ts-errors.git"
+  },
+  "author": "hexh <250786313@qq.com>",
+  "license": "MIT",
+  "dependencies": {
+    "pretty-ts-errors-lsp": "^0.0.3"
+  },
+  "devDependencies": {
+    "coc.nvim": "^0.0.83-next.9",
+    "@tsconfig/recommended": "^1.0.3",
+    "@types/node": "^14.14.0",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "chokidar": "^3.5.3",
+    "esbuild": "^0.20.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "husky": "^9.0.7",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.2.4",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  }
+}
