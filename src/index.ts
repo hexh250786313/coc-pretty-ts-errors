@@ -1,5 +1,8 @@
 import { Diagnostic, diagnosticManager, services, workspace } from 'coc.nvim'
 import { formatDiagnostic } from 'pretty-ts-errors-lsp'
+import objectHash from 'object-hash'
+
+type DiagnosticHash = string
 
 const formatted = (_diagnostics: Diagnostic[]) => {
   const diagnostics = _diagnostics.map((diagnostic) => {
@@ -20,13 +23,25 @@ export async function activate() {
   const ts = services.getService('tsserver')
   ts.onServiceReady(() => {
     diagnosticManager.onDidRefresh(async ({ diagnostics: all }) => {
-      const tsDiagnostics = all.filter((i) => i.source === 'tsserver')
-      const tsDiagnosticsCodes = tsDiagnostics.map((i) => i.code)
-      const existing = all.filter((i) => i.source === 'pretty-ts-errors')
-      const existingCodes = existing.map((i) => i.code)
+      const tsDiagnosticsHashes: Array<DiagnosticHash> = []
+      const tsDiagnostics = all.filter((i) => {
+        if (i.source === 'tsserver') {
+          const hash = objectHash(i)
+          tsDiagnosticsHashes.push(hash)
+          return true
+        }
+      })
+      const existingHashes: Array<DiagnosticHash> = []
+      const existing = all.filter((i) => {
+        if (i.source === 'pretty-ts-errors') {
+          const hash = objectHash(i)
+          existingHashes.push(hash)
+          return true
+        }
+      })
       if (
         tsDiagnostics.length === existing.length &&
-        tsDiagnosticsCodes.every((i) => existingCodes.includes(i))
+        tsDiagnosticsHashes.every((i) => existingHashes.includes(i))
       ) {
         return
       }
