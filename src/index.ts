@@ -8,9 +8,10 @@ const formatted = (_diagnostics: Diagnostic[]) => {
   const diagnostics = _diagnostics.map((diagnostic) => {
     return {
       ...diagnostic,
-      message: formatDiagnostic(diagnostic, (type) => type),
+      message:
+        `${diagnostic.message.slice(0, 50)} ...\n.\n.\n` +
+        `${formatDiagnostic(diagnostic, (type) => type)}\n`,
       // message: "this.\u001b[0m\u001b[31m\u001b[1mhistory\u001b[0m.add()\nthis.history.add()\n",
-      // message: "hello, world\n```javascript\nconst j = 'hello';\n```\n42",
       filetype: 'markdown',
       source: 'pretty-ts-errors',
     }
