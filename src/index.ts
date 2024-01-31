@@ -1,5 +1,5 @@
 import { Diagnostic, diagnosticManager, services, workspace } from 'coc.nvim'
-import { formatDiagnostic } from 'pretty-ts-errors-lsp'
+import { formatDiagnostic } from 'pretty-ts-errors-ansi'
 import objectHash from 'object-hash'
 
 type DiagnosticHash = string

@@ -41,7 +41,7 @@ deleteBuild()
 start()
 
 if (process.argv.length > 2 && process.argv[2] === '--watch') {
-  const watcher = chokidar.watch('src/**/*.*', {
+  const watcher = chokidar.watch(['src/**/*.*', 'yalc.lock'], {
     ignoreInitial: true,
   })
 

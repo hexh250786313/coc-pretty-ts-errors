@@ -133,3 +133,5 @@ lib/
 build/
 .git
 tags
+.yalc
+yalc.lock

@@ -52,7 +52,7 @@
   "dependencies": {
     "@types/object-hash": "^3.0.6",
     "object-hash": "^3.0.0",
-    "pretty-ts-errors-lsp": "^0.0.3"
+    "pretty-ts-errors-ansi": "file:.yalc/pretty-ts-errors-ansi"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
