@@ -9,13 +9,8 @@ const formatted = (_diagnostics: Diagnostic[]) => {
     return {
       ...diagnostic,
       message: `${formatDiagnostic(diagnostic, (type) => type)}\n\n`,
-      // message:
-      //   `${diagnostic.message.slice(0, 50)} ...\n.\n.\n` +
-      //   `${formatDiagnostic(diagnostic, (type) => type)}\n`,
-      // message: "this.\u001b[0m\u001b[31m\u001b[1mhistory\u001b[0m.add()\nthis.history.add()\n",
       filetype: 'markdown',
       source: 'pretty-ts-errors',
-      codeDescription: [],
     }
   })
   return diagnostics
@@ -50,8 +45,9 @@ export async function activate() {
       }
       const formattedDiagnostics = formatted(tsDiagnostics)
       const doc = await workspace.document
-      console.log('formattedDiagnostics', formattedDiagnostics)
-      collection.set(doc.uri, formattedDiagnostics)
+      setTimeout(() => {
+        collection.set(doc.uri, formattedDiagnostics)
+      })
     })
   })
 }
