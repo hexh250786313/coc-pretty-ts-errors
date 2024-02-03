@@ -134,3 +134,4 @@ build/
 tags
 .yalc
 yalc.lock
+.husky
