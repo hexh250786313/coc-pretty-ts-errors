@@ -129,7 +129,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-lib/
 build/
 .git
 tags
