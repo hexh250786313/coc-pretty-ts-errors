@@ -4,6 +4,8 @@ Inspired by https://github.com/yoavbls/pretty-ts-errors. This CoC extension is a
 
 Based on https://github.com/hexh250786313/pretty-ts-errors-markdown.
 
+https://github.com/hexh250786313/coc-pretty-ts-errors/assets/26080416/cae19b18-e4cb-4fee-8739-caec87a588c6
+
 ## Usage
 
 Make sure you have `coc.nvim` and `coc-tsserver` installed. Then run the following command:
