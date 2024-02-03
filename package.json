@@ -30,8 +30,8 @@
   ],
   "scripts": {
     "clean": "npx rimraf build",
-    "start": "npm i && NODE_ENV=development node esbuild.js --watch",
-    "build": "npm i && NODE_ENV=production node esbuild.js",
+    "start": "NODE_ENV=development node esbuild.js --watch",
+    "build": "NODE_ENV=production node esbuild.js",
     "prepare": "husky install && npm run clean"
   },
   "lint-staged": {
@@ -50,11 +50,11 @@
   "author": "hexh <250786313@qq.com>",
   "license": "MIT",
   "dependencies": {
-    "@types/object-hash": "^3.0.6",
     "object-hash": "^3.0.0",
-    "pretty-ts-errors-ansi": "file:.yalc/pretty-ts-errors-ansi"
+    "pretty-ts-errors-markdown": "^0.0.1"
   },
   "devDependencies": {
+    "@types/object-hash": "^3.0.6",
     "@tsconfig/recommended": "^1.0.3",
     "@types/node": "^16.18.0",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
@@ -70,5 +70,18 @@
     "prettier": "^3.2.4",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
+  },
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "coc-pretty-ts-errors configuration",
+      "properties": {
+        "pretty-ts-errors.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable coc-pretty-ts-errors extension"
+        }
+      }
+    }
   }
 }

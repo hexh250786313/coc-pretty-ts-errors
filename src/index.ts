@@ -1,6 +1,8 @@
 import { Diagnostic, diagnosticManager, services, workspace } from 'coc.nvim'
-import { formatDiagnostic } from 'pretty-ts-errors-ansi'
+import { formatDiagnostic } from 'pretty-ts-errors-markdown'
 import objectHash from 'object-hash'
+
+const NAMESPACE = 'pretty-ts-errors'
 
 type DiagnosticHash = string
 
@@ -19,20 +21,23 @@ const format = (_diagnostics: Diagnostic[]) => {
         return line
       })
       .join('\n')
-    console.log('formatted', formatted)
     return {
       ...diagnostic,
       message: `${formatted}\n\n`,
       filetype: 'markdown',
-      source: 'pretty-ts-errors',
-      codeDescription: [],
+      source: NAMESPACE,
     }
   })
   return diagnostics
 }
 
 export async function activate() {
-  const collection = diagnosticManager.create('pretty-ts-errors')
+  const configuration = workspace.getConfiguration(NAMESPACE)
+  const isEnable = configuration.get('enable', true)
+  if (!isEnable) {
+    return null
+  }
+  const collection = diagnosticManager.create(NAMESPACE)
   const ts = services.getService('tsserver')
   ts.onServiceReady(() => {
     diagnosticManager.onDidRefresh(async ({ diagnostics: all }) => {
@@ -65,4 +70,5 @@ export async function activate() {
       })
     })
   })
+  return null
 }
