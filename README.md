@@ -19,3 +19,4 @@ Make sure you have `coc.nvim` and `coc-tsserver` installed. Then run the followi
 Here are the available configuration options for coc-pretty-ts-errors:
 
 - `pretty-ts-errors.enable`: (Boolean, default: `true`) Enable or disable the coc-pretty-ts-errors extension.
+- `pretty-ts-errors.showLink`: (Boolean, default: `false`) Show ref links in error message.

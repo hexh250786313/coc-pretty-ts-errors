@@ -80,6 +80,11 @@
           "type": "boolean",
           "default": true,
           "description": "Enable coc-pretty-ts-errors extension"
+        },
+        "pretty-ts-errors.showLink": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show ref links in error message"
         }
       }
     }
