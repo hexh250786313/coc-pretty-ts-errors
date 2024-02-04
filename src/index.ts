@@ -73,7 +73,7 @@ export async function activate(context: ExtensionContext) {
   const configuration = workspace.getConfiguration(NAMESPACE)
   const isEnable = configuration.get('enable', true)
   const showLink = configuration.get('showLink', false)
-  const mode = configuration.get('displayMode', Mode.Both)
+  const mode = configuration.get('mode', Mode.Both)
   if (!isEnable) {
     return null
   }
