@@ -39,19 +39,23 @@ const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
   return diagnostics
 }
 
+let hidingStep = 0
+
 export async function activate() {
   const configuration = workspace.getConfiguration(NAMESPACE)
   const isEnable = configuration.get('enable', true)
   const showLink = configuration.get('showLink', false)
+  const hideSource = configuration.get('hideSource', true)
   if (!isEnable) {
     return null
   }
   const ts = services.getService(TS_NAMESPACE)
   ts.onServiceReady(() => {
     const collection = diagnosticManager.create(NAMESPACE)
+    const tsCollection = diagnosticManager.getCollectionByName(TS_NAMESPACE)
     diagnosticManager.onDidRefresh(async ({ diagnostics: all, uri }) => {
       if (all.length === 0) {
-        collection.set(uri, [])
+        collection.clear()
         return
       }
       const tsDiagnosticsHashes: Array<DiagnosticHash> = []
@@ -76,17 +80,56 @@ export async function activate() {
           return true
         }
       })
-      if (
+      if (tsDiagnostics?.length) {
+        // if there are tsDiagnostics, it means we should turn off hiding source process
+        hidingStep = 0
+      }
+      console.log('next', {
+        hidingStep,
+        tsDiagnosticsHashes,
+        existingHashes,
+      })
+      // hidingStep > 0 means it is in the process of hiding source
+      if (hideSource && hidingStep > 0) {
+        hidingStep++
+        console.log('step a', hidingStep)
+        if (hidingStep === 3) {
+          // not to update pretty diagnostics while step 3
+          // because there are the two ticks when it is in the hiding process
+          // and we should skip the first tick(step 3) and update the pretty diagnostics on the second tick(step 4)
+          return
+        }
+      } else if (
+        !hideSource &&
         tsDiagnostics.length === existing.length &&
         tsDiagnosticsHashes.every((i) => existingHashes.includes(i))
       ) {
         return
       }
-      const formattedDiagnostics = format(tsDiagnostics, {
-        showLink,
-      })
+      const formattedDiagnostics = tsDiagnostics?.length
+        ? format(tsDiagnostics, {
+            showLink,
+          })
+        : existing
       setTimeout(() => {
+        if (hideSource) {
+          if (hidingStep >= 4) {
+            console.log('step b', hidingStep)
+            hidingStep = 0
+          } else {
+            tsCollection.set(uri, [])
+            hidingStep = 1 // start hiding source
+            console.log('hide start', hidingStep)
+          }
+        }
         collection.set(uri, formattedDiagnostics)
+        if (hideSource && hidingStep === 1) {
+          hidingStep++ // step 2
+          console.log('update pretty', hidingStep)
+        }
+
+        // both of collection.set and tsCollection.set could trigger onDidRefresh
+        // that is why there are two ticks when hiding source
       })
     })
   })
