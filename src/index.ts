@@ -49,7 +49,7 @@ export async function activate() {
   const collection = diagnosticManager.create(NAMESPACE)
   const ts = services.getService(TS_NAMESPACE)
   ts.onServiceReady(() => {
-    diagnosticManager.onDidRefresh(async ({ diagnostics: all }) => {
+    diagnosticManager.onDidRefresh(async ({ diagnostics: all, uri }) => {
       const tsDiagnosticsHashes: Array<DiagnosticHash> = []
       const tsDiagnostics = all.filter((i) => {
         if (i.source === TS_NAMESPACE) {
@@ -75,9 +75,8 @@ export async function activate() {
       const formattedDiagnostics = format(tsDiagnostics, {
         showLink,
       })
-      const doc = await workspace.document
       setTimeout(() => {
-        collection.set(doc.uri, formattedDiagnostics)
+        collection.set(uri, formattedDiagnostics)
       })
     })
   })
