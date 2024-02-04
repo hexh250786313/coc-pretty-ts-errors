@@ -1,4 +1,13 @@
-import { Diagnostic, diagnosticManager, services, workspace } from 'coc.nvim'
+import {
+  Diagnostic,
+  ExtensionContext,
+  Position,
+  Range,
+  diagnosticManager,
+  languages,
+  services,
+  workspace,
+} from 'coc.nvim'
 import { formatDiagnostic } from 'pretty-ts-errors-markdown'
 import objectHash from 'object-hash'
 
@@ -39,7 +48,9 @@ const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
   return diagnostics
 }
 
-export async function activate() {
+let lastPrettyDiagnostics: Diagnostic[] = []
+
+export async function activate(context: ExtensionContext) {
   const configuration = workspace.getConfiguration(NAMESPACE)
   const isEnable = configuration.get('enable', true)
   const showLink = configuration.get('showLink', false)
@@ -51,6 +62,7 @@ export async function activate() {
     const collection = diagnosticManager.create(NAMESPACE)
     diagnosticManager.onDidRefresh(async ({ diagnostics: all, uri }) => {
       if (all.length === 0) {
+        lastPrettyDiagnostics = []
         collection.set(uri, [])
         return
       }
@@ -86,9 +98,53 @@ export async function activate() {
         showLink,
       })
       setTimeout(() => {
+        lastPrettyDiagnostics = [...formattedDiagnostics]
         collection.set(uri, formattedDiagnostics)
       })
     })
   })
-  return null
+
+  // const selctor: DocumentSelector = null;
+  context.subscriptions.push(
+    languages.registerHoverProvider(
+      [
+        {
+          language: '*',
+        },
+      ],
+      {
+        provideHover: (doc, pos) => {
+          console.log('hover', {
+            doc,
+            pos,
+            lastPrettyDiagnostics,
+          })
+          const res = lastPrettyDiagnostics
+            .map((d) => {
+              if (isPositionInRange(pos, d.range)) {
+                return {
+                  language: 'markdown',
+                  value: d.message,
+                }
+              }
+              return null
+            })
+            .filter(Boolean)
+          if (res && res.length) {
+            return res
+          }
+          return null
+        },
+      },
+    ),
+  )
+}
+
+function isPositionInRange(pos: Position, range: Range) {
+  return (
+    pos.line >= range.start.line &&
+    pos.line <= range.end.line &&
+    pos.character >= range.start.character &&
+    pos.character <= range.end.character
+  )
 }
