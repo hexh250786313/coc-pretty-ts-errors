@@ -24,3 +24,4 @@ Here are the available configuration options for coc-pretty-ts-errors:
 
 - `pretty-ts-errors.enable`: (Boolean, default: `true`) Enable or disable the coc-pretty-ts-errors extension.
 - `pretty-ts-errors.showLink`: (Boolean, default: `false`) Show ref links in error message.
+- `pretty-ts-errors.mode`: (0 | 1 | 2, default: `2`) Display mode of the error message. 0: diagnostic floating window. 1: `:call CocActionAsync('doHover')` hover floating window. 2: both of diagnostic and doHover.

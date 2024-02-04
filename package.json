@@ -1,6 +1,6 @@
 {
   "name": "coc-pretty-ts-errors",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "coc-pretty-ts-errors",
   "main": "lib/index.js",
   "engines": {
@@ -51,6 +51,11 @@
           "type": "boolean",
           "default": false,
           "description": "Show ref links in error message"
+        },
+        "pretty-ts-errors.mode": {
+          "type": "integer",
+          "default": 2,
+          "description": "Display mode of the error message. 0: diagnostic floating window. 1: `:call CocActionAsync('doHover')` hover floating window. 2: both of diagnostic and doHover"
         }
       }
     }
