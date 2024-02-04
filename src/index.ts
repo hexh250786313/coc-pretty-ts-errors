@@ -1,6 +1,7 @@
 import {
   Diagnostic,
   ExtensionContext,
+  MarkedString,
   Position,
   Range,
   diagnosticManager,
@@ -50,20 +51,40 @@ const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
 
 let lastPrettyDiagnostics: Diagnostic[] = []
 
+class Mode {
+  static readonly Diagnostic = 0
+  static readonly Hover = 1
+  static readonly Both = 2
+
+  constructor(public readonly value: number) {
+    this.value = value
+  }
+
+  showInDiagnostic() {
+    return this.value === Mode.Diagnostic || this.value === Mode.Both
+  }
+
+  showInHover() {
+    return this.value === Mode.Hover || this.value === Mode.Both
+  }
+}
+
 export async function activate(context: ExtensionContext) {
   const configuration = workspace.getConfiguration(NAMESPACE)
   const isEnable = configuration.get('enable', true)
   const showLink = configuration.get('showLink', false)
+  const mode = configuration.get('displayMode', Mode.Both)
   if (!isEnable) {
     return null
   }
+  const modeObj = new Mode(mode)
   const ts = services.getService(TS_NAMESPACE)
   ts.onServiceReady(() => {
     const collection = diagnosticManager.create(NAMESPACE)
     diagnosticManager.onDidRefresh(async ({ diagnostics: all, uri }) => {
       if (all.length === 0) {
         lastPrettyDiagnostics = []
-        collection.set(uri, [])
+        modeObj.showInDiagnostic() && collection.set(uri, [])
         return
       }
       const tsDiagnosticsHashes: Array<DiagnosticHash> = []
@@ -99,26 +120,47 @@ export async function activate(context: ExtensionContext) {
       })
       setTimeout(() => {
         lastPrettyDiagnostics = [...formattedDiagnostics]
-        collection.set(uri, formattedDiagnostics)
+        modeObj.showInDiagnostic() && collection.set(uri, formattedDiagnostics)
       })
     })
   })
 
-  // const selctor: DocumentSelector = null;
   context.subscriptions.push(
     languages.registerHoverProvider(
       [
         {
-          language: '*',
+          language: 'javascript',
+        },
+        {
+          language: 'javascriptreact',
+        },
+        {
+          language: 'javascript.jsx',
+        },
+        {
+          language: 'typescript',
+        },
+        {
+          language: 'typescriptreact',
+        },
+        {
+          language: 'typescript.tsx',
+        },
+        {
+          language: 'typescript.jsx',
+        },
+        {
+          language: 'jsx-tags',
+        },
+        {
+          language: 'jsonc',
         },
       ],
       {
-        provideHover: (doc, pos) => {
-          console.log('hover', {
-            doc,
-            pos,
-            lastPrettyDiagnostics,
-          })
+        provideHover: (_doc, pos) => {
+          if (!modeObj.showInHover()) {
+            return null
+          }
           const res = lastPrettyDiagnostics
             .map((d) => {
               if (isPositionInRange(pos, d.range)) {
@@ -130,10 +172,9 @@ export async function activate(context: ExtensionContext) {
               return null
             })
             .filter(Boolean)
-          if (res && res.length) {
-            return res
+          return {
+            contents: res as MarkedString[],
           }
-          return null
         },
       },
     ),
