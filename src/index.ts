@@ -53,7 +53,10 @@ export async function activate() {
       const tsDiagnosticsHashes: Array<DiagnosticHash> = []
       const tsDiagnostics = all.filter((i) => {
         if (i.source === TS_NAMESPACE) {
-          const hash = objectHash(i)
+          const hash = objectHash({
+            code: i.code,
+            range: i.range,
+          })
           tsDiagnosticsHashes.push(hash)
           return true
         }
@@ -61,7 +64,10 @@ export async function activate() {
       const existingHashes: Array<DiagnosticHash> = []
       const existing = all.filter((i) => {
         if (i.source === NAMESPACE) {
-          const hash = objectHash(i)
+          const hash = objectHash({
+            code: i.code,
+            range: i.range,
+          })
           existingHashes.push(hash)
           return true
         }
