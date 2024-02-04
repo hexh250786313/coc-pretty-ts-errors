@@ -46,10 +46,14 @@ export async function activate() {
   if (!isEnable) {
     return null
   }
-  const collection = diagnosticManager.create(NAMESPACE)
   const ts = services.getService(TS_NAMESPACE)
   ts.onServiceReady(() => {
+    const collection = diagnosticManager.create(NAMESPACE)
     diagnosticManager.onDidRefresh(async ({ diagnostics: all, uri }) => {
+      if (all.length === 0) {
+        collection.set(uri, [])
+        return
+      }
       const tsDiagnosticsHashes: Array<DiagnosticHash> = []
       const tsDiagnostics = all.filter((i) => {
         if (i.source === TS_NAMESPACE) {
