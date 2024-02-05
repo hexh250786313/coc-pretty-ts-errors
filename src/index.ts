@@ -49,7 +49,7 @@ const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
   return diagnostics
 }
 
-let lastPrettyDiagnostics: Diagnostic[] = []
+const lastPrettyDiagnostics: Record<string, Diagnostic[]> = {}
 
 class Mode {
   static readonly Diagnostic = 0
@@ -83,7 +83,7 @@ export async function activate(context: ExtensionContext) {
     const collection = diagnosticManager.create(NAMESPACE)
     diagnosticManager.onDidRefresh(async ({ diagnostics: all, uri }) => {
       if (all.length === 0) {
-        lastPrettyDiagnostics = []
+        lastPrettyDiagnostics[uri] = []
         modeObj.showInDiagnostic() && collection.set(uri, [])
         return
       }
@@ -119,7 +119,7 @@ export async function activate(context: ExtensionContext) {
         showLink,
       })
       setTimeout(() => {
-        lastPrettyDiagnostics = [...formattedDiagnostics]
+        lastPrettyDiagnostics[uri] = [...formattedDiagnostics]
         modeObj.showInDiagnostic() && collection.set(uri, formattedDiagnostics)
       })
     })
@@ -161,8 +161,8 @@ export async function activate(context: ExtensionContext) {
           if (!modeObj.showInHover()) {
             return null
           }
-          const res = lastPrettyDiagnostics
-            .map((d) => {
+          const res = lastPrettyDiagnostics[_doc.uri]
+            ?.map((d) => {
               if (isPositionInRange(pos, d.range)) {
                 return {
                   language: 'markdown',
