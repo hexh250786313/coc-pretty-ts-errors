@@ -30,7 +30,7 @@ const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
         if (matches) {
           matches.forEach((match) => {
             const text = match.slice(1, -1)
-            line = line.replace(match, `\u001b[31m${text}\u001b[0m`)
+            line = line.replace(match, `\u001b[1;34m${text}\u001b[0m`)
           })
         }
         if (opt.showLink === false) {
@@ -163,6 +163,11 @@ export async function activate(context: ExtensionContext) {
           }
           const res = lastPrettyDiagnostics[_doc.uri]
             ?.map((d) => {
+              console.log({
+                pos,
+                range: d.range,
+                isPositionInRange: isPositionInRange(pos, d.range),
+              })
               if (isPositionInRange(pos, d.range)) {
                 return {
                   language: 'markdown',
@@ -182,10 +187,11 @@ export async function activate(context: ExtensionContext) {
 }
 
 function isPositionInRange(pos: Position, range: Range) {
-  return (
-    pos.line >= range.start.line &&
-    pos.line <= range.end.line &&
-    pos.character >= range.start.character &&
-    pos.character <= range.end.character
-  )
+  let flag = true
+  if (pos.line < range.start.line || pos.line > range.end.line) flag = false
+  if (pos.line === range.start.line && pos.character < range.start.character)
+    flag = false
+  if (pos.line === range.end.line && pos.character > range.end.character)
+    flag = false
+  return flag
 }
