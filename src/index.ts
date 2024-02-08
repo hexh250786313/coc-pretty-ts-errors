@@ -21,20 +21,57 @@ type formatOptions = {
   showLink: boolean
 }
 
+async function registerRuntimepath(extensionPath: string) {
+  const { nvim } = workspace
+  const rtp = (await nvim.getOption('runtimepath')) as string
+  const paths = rtp.split(',')
+  if (!paths.includes(extensionPath)) {
+    await nvim.command(
+      `execute 'noa set rtp+='.fnameescape('${extensionPath.replace(
+        /'/g,
+        "''",
+      )}')`,
+    )
+  }
+}
+
+function replaceBackticksExceptCodeBlocks(text: string) {
+  // 正则表达式用于匹配代码块
+  const codeBlockRegex = /```[\s\S]*?```/g
+  // 正则表达式用于匹配被反引号包裹的文本
+  const backtickRegex = /`([^`]+)`/g
+
+  // 暂存代码块
+  const codeBlocks: string[] = []
+  // 替换代码块为占位符，并暂存代码块内容
+  const textWithPlaceholders = text.replace(codeBlockRegex, (match: string) => {
+    codeBlocks.push(match)
+    return '\0' // 使用非常见字符作为占位符
+  })
+
+  // 在非代码块文本中替换反引号包裹的内容
+  const replacedText = textWithPlaceholders.replace(
+    backtickRegex,
+    '\u001b[1;34m$1\u001b[0m',
+  )
+
+  // 将占位符替换回原始代码块内容
+  const finalText = replacedText.replace(/\0/g, () => codeBlocks.shift() || '')
+
+  return finalText
+}
+
 const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
   const diagnostics = _diagnostics.map((diagnostic) => {
-    const formatted = formatDiagnostic(diagnostic)
+    const formatted = replaceBackticksExceptCodeBlocks(
+      formatDiagnostic(diagnostic),
+    )
       .split('\n')
       .map((line) => {
-        const matches = line.match(/`[^`]+`/g)
-        if (matches) {
-          matches.forEach((match) => {
-            const text = match.slice(1, -1)
-            line = line.replace(match, `\u001b[1;34m${text}\u001b[0m`)
-          })
-        }
         if (opt.showLink === false) {
-          line = line.replace(/^\*@see\*.*/g, '')
+          line = line
+            .replace(/^\*@see\*.*/g, '')
+            .replace(/```typescript/g, '```prettytserr')
         }
         return line
       })
@@ -125,6 +162,8 @@ export async function activate(context: ExtensionContext) {
     })
   })
 
+  await registerRuntimepath(context.extensionPath)
+
   context.subscriptions.push(
     languages.registerHoverProvider(
       [
@@ -163,11 +202,6 @@ export async function activate(context: ExtensionContext) {
           }
           const res = lastPrettyDiagnostics[_doc.uri]
             ?.map((d) => {
-              console.log({
-                pos,
-                range: d.range,
-                isPositionInRange: isPositionInRange(pos, d.range),
-              })
               if (isPositionInRange(pos, d.range)) {
                 return {
                   language: 'markdown',
