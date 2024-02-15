@@ -93,7 +93,7 @@ const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
           line = line.replace(/^\*@see\*.*/g, '')
         }
         if (opt.codeBlockHighlightType === 'prettytserr') {
-          line = line.replace(/(?<=(^\s+```))typescript/, 'prettytserr')
+          line = line.replace(/(?<=(^\s*```))typescript/, 'prettytserr')
         } else {
           const match = line.match(/^(\s*)```typescript.*/)
           const spaceCount = match?.[1].length || 0
