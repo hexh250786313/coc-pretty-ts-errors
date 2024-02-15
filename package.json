@@ -1,6 +1,6 @@
 {
   "name": "coc-pretty-ts-errors",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "coc-pretty-ts-errors",
   "main": "lib/index.js",
   "engines": {
@@ -29,7 +29,7 @@
     "onCommand:tsserver.watchBuild"
   ],
   "scripts": {
-    "release": "git checkout master -- ./README.md && cp ./build/index.js ./lib && rm -rf ./build"
+    "release": "git checkout master -- ./README.md ./ftdetect ./syntax && cp ./build/index.js ./lib && rm -rf ./build"
   },
   "repository": {
     "type": "git",
@@ -55,7 +55,30 @@
         "pretty-ts-errors.mode": {
           "type": "integer",
           "default": 2,
-          "description": "Display mode of the error message. 0: diagnostic floating window. 1: `:call CocActionAsync('doHover')` hover floating window. 2: both of diagnostic and doHover"
+          "description": "Display mode of the error message.",
+          "markdownEnumDescriptions": [
+            "Diagnostic floating window",
+            "`:call CocActionAsync('doHover')` hover floating window",
+            "Both of diagnostic and doHover"
+          ],
+          "enum": [
+            0,
+            1,
+            2
+          ]
+        },
+        "pretty-ts-errors.codeBlockHighlightType": {
+          "type": "string",
+          "default": "prettytserr",
+          "description": "The way to highlight code block.",
+          "markdownEnumDescriptions": [
+            "Single color by `\"PrettyTsErrorType\"` highlight group",
+            "TS syntax highlight with extra `\"type Type =\"`"
+          ],
+          "enum": [
+            "prettytserr",
+            "typescript"
+          ]
         }
       }
     }
