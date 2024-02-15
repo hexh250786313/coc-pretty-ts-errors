@@ -1,5 +1,6 @@
 import {
   Diagnostic,
+  DiagnosticSeverity,
   ExtensionContext,
   MarkedString,
   Position,
@@ -9,8 +10,8 @@ import {
   services,
   workspace,
 } from 'coc.nvim'
-import { formatDiagnostic } from 'pretty-ts-errors-markdown'
 import objectHash from 'object-hash'
+import { formatDiagnostic } from 'pretty-ts-errors-markdown'
 
 const NAMESPACE = 'pretty-ts-errors'
 const TS_NAMESPACE = 'tsserver'
@@ -19,6 +20,7 @@ type DiagnosticHash = string
 
 type formatOptions = {
   showLink: boolean
+  codeBlockHighlightType: 'prettytserr' | 'typescript'
 }
 
 async function registerRuntimepath(extensionPath: string) {
@@ -35,31 +37,45 @@ async function registerRuntimepath(extensionPath: string) {
   }
 }
 
+/** Replace backticks in text, but not in code blocks */
 function replaceBackticksExceptCodeBlocks(text: string) {
-  // 正则表达式用于匹配代码块
   const codeBlockRegex = /```[\s\S]*?```/g
-  // 正则表达式用于匹配被反引号包裹的文本
   const backtickRegex = /`([^`]+)`/g
 
-  // 暂存代码块
   const codeBlocks: string[] = []
-  // 替换代码块为占位符，并暂存代码块内容
   const textWithPlaceholders = text.replace(codeBlockRegex, (match: string) => {
     codeBlocks.push(match)
-    return '\0' // 使用非常见字符作为占位符
+    return '\0'
   })
 
-  // 在非代码块文本中替换反引号包裹的内容
   const replacedText = textWithPlaceholders.replace(
     backtickRegex,
     '\u001b[1;34m$1\u001b[0m',
   )
 
-  // 将占位符替换回原始代码块内容
   const finalText = replacedText.replace(/\0/g, () => codeBlocks.shift() || '')
 
   return finalText
 }
+
+const error = (str: string) => {
+  return `\u001b[1;31m${str}\u001b[0m`
+}
+
+const warning = (str: string) => {
+  return `\u001b[1;32m${str}\u001b[0m`
+}
+
+const info = (str: string) => {
+  return `\u001b[1;36m${str}\u001b[0m`
+}
+
+const renderType = {
+  [DiagnosticSeverity.Error]: error,
+  [DiagnosticSeverity.Warning]: warning,
+  [DiagnosticSeverity.Information]: info,
+  [DiagnosticSeverity.Hint]: info,
+} as const
 
 const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
   const diagnostics = _diagnostics.map((diagnostic) => {
@@ -67,11 +83,24 @@ const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
       formatDiagnostic(diagnostic),
     )
       .split('\n')
-      .map((line) => {
+      .map((line, index) => {
+        if (index === 0) {
+          line = renderType[diagnostic.severity || DiagnosticSeverity.Error](
+            line.substring(3, line.length),
+          )
+        }
         if (opt.showLink === false) {
-          line = line
-            .replace(/^\*@see\*.*/g, '')
-            .replace(/```typescript/g, '```prettytserr')
+          line = line.replace(/^\*@see\*.*/g, '')
+        }
+        if (opt.codeBlockHighlightType === 'prettytserr') {
+          line = line.replace(/(?<=(^\s+```))typescript/, 'prettytserr')
+        } else {
+          const match = line.match(/^(\s*)```typescript.*/)
+          const spaceCount = match?.[1].length || 0
+          line = line.replace(
+            /(?<=(^\s*```))typescript/,
+            `typescript\n${'\u0020'.repeat(spaceCount)}type Type =`,
+          )
         }
         return line
       })
@@ -111,6 +140,10 @@ export async function activate(context: ExtensionContext) {
   const isEnable = configuration.get('enable', true)
   const showLink = configuration.get('showLink', false)
   const mode = configuration.get('mode', Mode.Both)
+  const codeBlockHighlightType = configuration.get(
+    'codeBlockHighlightType',
+    'prettytserr',
+  )
   if (!isEnable) {
     return null
   }
@@ -154,6 +187,7 @@ export async function activate(context: ExtensionContext) {
       }
       const formattedDiagnostics = format(tsDiagnostics, {
         showLink,
+        codeBlockHighlightType,
       })
       setTimeout(() => {
         lastPrettyDiagnostics[uri] = [...formattedDiagnostics]

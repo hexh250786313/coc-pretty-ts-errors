@@ -51,7 +51,7 @@
   "license": "MIT",
   "dependencies": {
     "object-hash": "^3.0.0",
-    "pretty-ts-errors-markdown": "^0.0.1"
+    "pretty-ts-errors-markdown": "^0.0.2"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
@@ -89,7 +89,30 @@
         "pretty-ts-errors.mode": {
           "type": "integer",
           "default": 2,
-          "description": "Display mode of the error message. 0: diagnostic floating window. 1: `:call CocActionAsync('doHover')` hover floating window. 2: both of diagnostic and doHover"
+          "description": "Display mode of the error message.",
+          "markdownEnumDescriptions": [
+            "Diagnostic floating window",
+            "`:call CocActionAsync('doHover')` hover floating window",
+            "Both of diagnostic and doHover"
+          ],
+          "enum": [
+            0,
+            1,
+            2
+          ]
+        },
+        "pretty-ts-errors.codeBlockHighlightType": {
+          "type": "string",
+          "default": "prettytserr",
+          "description": "The way to highlight code block.",
+          "markdownEnumDescriptions": [
+            "Single color by `\"PrettyTsErrorType\"` highlight group",
+            "TS syntax highlight with extra `\"type Type =\"`"
+          ],
+          "enum": [
+            "prettytserr",
+            "typescript"
+          ]
         }
       }
     }
