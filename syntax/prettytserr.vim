@@ -1,2 +1,2 @@
 syntax match PrettyTsErrorType ".*"
-highlight def link PrettyTsErrorType Function
+highlight def PrettyTsErrorType guifg=#6d8086
