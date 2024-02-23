@@ -48,10 +48,10 @@ function replaceBackticksExceptCodeBlocks(text: string) {
     return '\0'
   })
 
-  const replacedText = textWithPlaceholders.replace(
-    backtickRegex,
-    '\u001b[1;34m$1\u001b[0m',
-  )
+  const replacedText = textWithPlaceholders
+    .replace(/</g, '\\<')
+    .replace(/>/g, '\\>')
+    .replace(backtickRegex, '\u001b[1;34m$1\u001b[0m')
 
   const finalText = replacedText.replace(/\0/g, () => codeBlocks.shift() || '')
 
@@ -90,7 +90,7 @@ const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
           )
         }
         if (opt.showLink === false) {
-          line = line.replace(/^\*@see\*.*/g, '')
+          line = line.replace(/^_@see_.*/g, '')
         }
         if (opt.codeBlockHighlightType === 'prettytserr') {
           line = line.replace(/(?<=(^\s*```))typescript/, 'prettytserr')
