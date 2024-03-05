@@ -36,5 +36,11 @@ Here are the available configuration options for coc-pretty-ts-errors:
 
 - `pretty-ts-errors.enable`: (Boolean, default: `true`) Enable or disable the coc-pretty-ts-errors extension.
 - `pretty-ts-errors.showLink`: (Boolean, default: `false`) Show ref links in error message.
-- `pretty-ts-errors.mode`: (0 | 1 | 2, default: `2`) Display mode of the error message.
+- `pretty-ts-errors.mode`: (0 | 1 | 2, default: `1`) Display mode of the error message.
 - `pretty-ts-errors.codeBlockHighlightType`: ("prettytserr" | "typescript", default: `"prettytserr"`) The way to highlight code block.
+
+## Q & A
+
+Q: `:CocList diagnostics` has additional error messages from `coc-pretty-ts-errors`.
+
+A: When choosing to display error messages in the diagnostic floating window (mode `0` and `2`), it will cause `:CocList diagnostics` to have additional error messages from `coc-pretty-ts-errors`. These error messages are formatted copies of the original errors, and there is currently no good way to remove these messages (the same problem also occurs in the diagnostics virtual text at the end of the line). Therefore, I personally recommend using mode `1` with `:call CocActionAsync('doHover')`.

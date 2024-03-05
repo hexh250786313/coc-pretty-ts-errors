@@ -1,6 +1,6 @@
 {
   "name": "coc-pretty-ts-errors",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "coc-pretty-ts-errors",
   "main": "lib/index.js",
   "engines": {
@@ -54,7 +54,7 @@
         },
         "pretty-ts-errors.mode": {
           "type": "integer",
-          "default": 2,
+          "default": 1,
           "description": "Display mode of the error message.",
           "markdownEnumDescriptions": [
             "Diagnostic floating window",
