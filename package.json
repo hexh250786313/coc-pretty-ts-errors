@@ -51,7 +51,7 @@
   "license": "MIT",
   "dependencies": {
     "object-hash": "^3.0.0",
-    "pretty-ts-errors-markdown": "0.0.3-dev-202402232207"
+    "pretty-ts-errors-markdown": "0.0.4-dev.202403052203"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
@@ -88,7 +88,7 @@
         },
         "pretty-ts-errors.mode": {
           "type": "integer",
-          "default": 2,
+          "default": 1,
           "description": "Display mode of the error message.",
           "markdownEnumDescriptions": [
             "Diagnostic floating window",
