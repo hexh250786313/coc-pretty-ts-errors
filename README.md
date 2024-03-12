@@ -41,6 +41,10 @@ Here are the available configuration options for coc-pretty-ts-errors:
 
 ## Q & A
 
-Q: `:CocList diagnostics` has additional error messages from `coc-pretty-ts-errors`.
+**Q1: `:CocList diagnostics` has additional error messages from `coc-pretty-ts-errors`.**
 
-A: When choosing to display error messages in the diagnostic floating window (mode `0` and `2`), it will cause `:CocList diagnostics` to have additional error messages from `coc-pretty-ts-errors`. These error messages are formatted copies of the original errors, and there is currently no good way to remove these messages (the same problem also occurs in the diagnostics virtual text at the end of the line). Therefore, I personally recommend using mode `1` with `:call CocActionAsync('doHover')`.
+**A1**: When choosing to display error messages in the diagnostic floating window (mode `0` and `2`), it will cause `:CocList diagnostics` to have additional error messages from `coc-pretty-ts-errors`. These error messages are formatted copies of the original errors, and there is currently no good way to remove these messages (the same problem also occurs in the diagnostics virtual text at the end of the line). Therefore, I personally recommend using mode `1` with `:call CocActionAsync('doHover')`.
+
+**Q2: The alignment of the markdown list format is a bit strange, and sometimes the indentation is too much.**
+
+**A2**: `coc.nvim` issue: https://github.com/neoclide/coc.nvim/issues/4882
