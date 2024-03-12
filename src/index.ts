@@ -89,8 +89,12 @@ const format = (_diagnostics: Diagnostic[], opt: formatOptions) => {
             line.substring(3, line.length),
           )
         }
+        line = line.replace(
+          /(\['?)([^' ]+)('?.+?📄\])/g,
+          (_match, _p1, target) => `[${target} 📄]`,
+        )
         if (opt.showLink === false) {
-          line = line.replace(/^_@see_.*/g, '')
+          line = line.replace(/\[(🔗|🌐)\]\(.*\)/g, '')
         }
         if (opt.codeBlockHighlightType === 'prettytserr') {
           line = line.replace(/(?<=(^\s*```))typescript/, 'prettytserr')

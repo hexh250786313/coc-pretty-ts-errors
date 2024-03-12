@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 interface Person {
   name: string
   age: number
@@ -48,7 +50,7 @@ interface StepProps {
   steps: any
 }
 
-type ComponentType<T> = (props: T) => {
+type Type1 = {
   type: any
   props: any
   key: any
@@ -63,8 +65,14 @@ type ComponentType<T> = (props: T) => {
   i: any
 }
 
+const t: Type1 = {}
+
+type ComponentType<T> = (props: T) => Type1
+
 const Step: ComponentType<StepProps> = (props) => {
   return {}
 }
+
+const c: ComponentType<any> = {}
 
 export default Step
