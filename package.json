@@ -1,6 +1,6 @@
 {
   "name": "coc-pretty-ts-errors",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "coc-pretty-ts-errors",
   "main": "lib/index.js",
   "engines": {
@@ -79,6 +79,11 @@
             "prettytserr",
             "typescript"
           ]
+        },
+        "pretty-ts-errors.serviceName": {
+          "type": "string",
+          "default": "tsserver",
+          "description": "The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name."
         }
       }
     }

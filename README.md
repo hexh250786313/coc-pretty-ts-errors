@@ -38,6 +38,7 @@ Here are the available configuration options for coc-pretty-ts-errors:
 - `pretty-ts-errors.showLink`: (Boolean, default: `false`) Show ref links in error message.
 - `pretty-ts-errors.mode`: (0 | 1 | 2, default: `1`) Display mode of the error message.
 - `pretty-ts-errors.codeBlockHighlightType`: ("prettytserr" | "typescript", default: `"prettytserr"`) The way to highlight code block.
+- `pretty-ts-errors.serviceName`: (String, default: `"tsserver"`) The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name.
 
 ## Q & A
 
