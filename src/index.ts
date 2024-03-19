@@ -149,6 +149,7 @@ export async function activate(context: ExtensionContext) {
     'prettytserr',
   )
   const serviceName = configuration.get('serviceName', TS_NAMESPACE)
+  const sourceName = configuration.get('sourceName', serviceName)
   TS_NAMESPACE = serviceName
   if (!isEnable) {
     return null
@@ -171,7 +172,7 @@ export async function activate(context: ExtensionContext) {
       }
       const tsDiagnosticsHashes: Array<DiagnosticHash> = []
       const tsDiagnostics = all.filter((i) => {
-        if (i.source === TS_NAMESPACE) {
+        if (i.source === sourceName) {
           const hash = objectHash({
             code: i.code,
             range: i.range,

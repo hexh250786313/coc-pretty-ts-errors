@@ -118,6 +118,10 @@
           "type": "string",
           "default": "tsserver",
           "description": "The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name."
+        },
+        "pretty-ts-errors.sourceName": {
+          "type": "string",
+          "description": "The name of the source. Same as `serviceName` by default."
         }
       }
     }
