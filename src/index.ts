@@ -14,7 +14,7 @@ import objectHash from 'object-hash'
 import { formatDiagnostic } from 'pretty-ts-errors-markdown'
 
 const NAMESPACE = 'pretty-ts-errors'
-const TS_NAMESPACE = 'tsserver'
+let TS_NAMESPACE = 'tsserver'
 
 type DiagnosticHash = string
 
@@ -148,11 +148,19 @@ export async function activate(context: ExtensionContext) {
     'codeBlockHighlightType',
     'prettytserr',
   )
+  const serviceName = configuration.get('serviceName', TS_NAMESPACE)
+  TS_NAMESPACE = serviceName
   if (!isEnable) {
     return null
   }
   const modeObj = new Mode(mode)
   const ts = services.getService(TS_NAMESPACE)
+  if (!ts) {
+    console.error(
+      `tsserver not found: serviceName '${TS_NAMESPACE}' is not available.`,
+    )
+    return null
+  }
   ts.onServiceReady(() => {
     const collection = diagnosticManager.create(NAMESPACE)
     diagnosticManager.onDidRefresh(async ({ diagnostics: all, uri }) => {
