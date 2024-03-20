@@ -148,9 +148,9 @@ export async function activate(context: ExtensionContext) {
     'codeBlockHighlightType',
     'prettytserr',
   )
-  const serviceName = configuration.get('serviceName', TS_NAMESPACE)
-  const sourceName = configuration.get('sourceName', serviceName)
-  TS_NAMESPACE = serviceName
+  const serverName = configuration.get('serverName', TS_NAMESPACE)
+  const sourceName = configuration.get('sourceName', serverName) || serverName
+  TS_NAMESPACE = serverName
   if (!isEnable) {
     return null
   }
@@ -158,7 +158,7 @@ export async function activate(context: ExtensionContext) {
   const ts = services.getService(TS_NAMESPACE)
   if (!ts) {
     console.error(
-      `tsserver not found: serviceName '${TS_NAMESPACE}' is not available.`,
+      `Tsserver not found: serverName '${TS_NAMESPACE}' is not available.`,
     )
     return null
   }

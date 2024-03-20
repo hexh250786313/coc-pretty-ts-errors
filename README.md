@@ -38,8 +38,8 @@ Here are the available configuration options for coc-pretty-ts-errors:
 - `pretty-ts-errors.showLink`: (Boolean, default: `false`) Show ref links in error message.
 - `pretty-ts-errors.mode`: (0 | 1 | 2, default: `1`) Display mode of the error message.
 - `pretty-ts-errors.codeBlockHighlightType`: ("prettytserr" | "typescript", default: `"prettytserr"`) The way to highlight code block.
-- `pretty-ts-errors.serviceName`: (String, default: `"tsserver"`) The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name.
-- `pretty-ts-errors.sourceName`: (String) The name of the source. Same as `serviceName` by default.
+- `pretty-ts-errors.serverName`: (String, default: `"tsserver"`) The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name.
+- `pretty-ts-errors.sourceName`: (String) The name of the source. Same as `serverName` by default.
 
 ## Q & A
 
@@ -50,3 +50,31 @@ Here are the available configuration options for coc-pretty-ts-errors:
 **Q2: The alignment of the markdown list format is a bit strange, and sometimes the indentation is too much.**
 
 **A2**: `coc.nvim` issue: https://github.com/neoclide/coc.nvim/issues/4882
+
+**Q3: eng: When to use `serverName` and `sourceName`**
+
+**A3**: Examples:
+
+- When using [coc-tsserver](/branches/test/README.md) , both `serverName` and `sourceName` are `"tsserver"`
+- When using a customized typescript `"languageserver"`, you need to modify `serverName` and `sourceName` to the corresponding values, such as [typescript-language-server](
+
+  ```json
+  // coc-settings.json
+  "pretty-ts-errors.serverName": "my-tsserver",
+                                 ~~~~~~~~~~~~~          Your customized typescript language server name.
+  "pretty-ts-errors.sourceName": "typescript",
+                                 ~~~~~~~~~~~~~          You have to know the source name of your customized typescript language server from its documentation.
+                                                        Like coc-tsserver is "tsserver" and typescript-language-server is "typescript".
+  "languageserver": {
+      "my-tsserver": {
+      ~~~~~~~~~~~~~          `serverName` is from here.
+          "enable": true,
+          "command": "typescript-language-server",
+          "args": ["--stdio"],
+
+          ...
+          ...other options
+
+      }
+  }
+  ```
