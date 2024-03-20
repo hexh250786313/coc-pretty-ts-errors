@@ -58,7 +58,7 @@ Here are the available configuration options for coc-pretty-ts-errors:
 - When using [coc-tsserver](/branches/test/README.md) , both `serverName` and `sourceName` are `"tsserver"`
 - When using a customized typescript `"languageserver"`, you need to modify `serverName` and `sourceName` to the corresponding values, such as [typescript-language-server](
 
-  ```json
+  ```
   // coc-settings.json
   "pretty-ts-errors.serverName": "my-tsserver",
                                  ~~~~~~~~~~~~~          Your customized typescript language server name.
