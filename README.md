@@ -51,7 +51,7 @@ Here are the available configuration options for coc-pretty-ts-errors:
 
 **A2**: `coc.nvim` issue: https://github.com/neoclide/coc.nvim/issues/4882
 
-**Q3: eng: When to use `serverName` and `sourceName`**
+**Q3: When to use `serverName` and `sourceName`**
 
 **A3**: Examples:
 
