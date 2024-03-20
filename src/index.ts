@@ -148,8 +148,9 @@ export async function activate(context: ExtensionContext) {
     'codeBlockHighlightType',
     'prettytserr',
   )
-  const serviceName = configuration.get('serviceName', TS_NAMESPACE)
-  TS_NAMESPACE = serviceName
+  const serverName = configuration.get('serverName', TS_NAMESPACE)
+  const sourceName = configuration.get('sourceName', serverName) || serverName
+  TS_NAMESPACE = serverName
   if (!isEnable) {
     return null
   }
@@ -157,7 +158,7 @@ export async function activate(context: ExtensionContext) {
   const ts = services.getService(TS_NAMESPACE)
   if (!ts) {
     console.error(
-      `tsserver not found: serviceName '${TS_NAMESPACE}' is not available.`,
+      `Tsserver not found: serverName '${TS_NAMESPACE}' is not available.`,
     )
     return null
   }
@@ -171,7 +172,7 @@ export async function activate(context: ExtensionContext) {
       }
       const tsDiagnosticsHashes: Array<DiagnosticHash> = []
       const tsDiagnostics = all.filter((i) => {
-        if (i.source === TS_NAMESPACE) {
+        if (i.source === sourceName) {
           const hash = objectHash({
             code: i.code,
             range: i.range,
