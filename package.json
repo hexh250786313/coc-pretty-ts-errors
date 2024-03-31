@@ -7,7 +7,6 @@
     "coc": "^0.0.82"
   },
   "keywords": [
-    "coc",
     "coc.nvim",
     "pretty-ts-errors"
   ],
@@ -51,7 +50,7 @@
   "license": "MIT",
   "dependencies": {
     "object-hash": "^3.0.0",
-    "pretty-ts-errors-markdown": "0.0.5"
+    "pretty-ts-errors-markdown": "*"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
