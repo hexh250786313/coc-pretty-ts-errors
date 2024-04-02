@@ -56,7 +56,7 @@ Here are the available configuration options for coc-pretty-ts-errors:
 **A3**: Examples:
 
 - When using [coc-tsserver](/branches/test/README.md) , both `serverName` and `sourceName` are `"tsserver"`
-- When using a customized typescript `"languageserver"`, you need to modify `serverName` and `sourceName` to the corresponding values, such as [typescript-language-server](
+- When using a customized typescript `"languageserver"`, you need to modify `serverName` and `sourceName` to the corresponding values, such as [typescript-language-server](https://github.com/typescript-language-server/typescript-language-server)
 
   ```
   // coc-settings.json
