@@ -12,7 +12,7 @@ async function start() {
       minify: process.env.NODE_ENV === 'production',
       sourcemap: process.env.NODE_ENV === 'development',
       mainFields: ['module', 'main'],
-      external: ['coc.nvim', 'typescript'],
+      external: ['coc.nvim', 'pretty-ts-errors-markdown'],
       platform: 'node',
       target: 'node14.14',
       outfile: 'node_modules/.esbuild-cache/build/index.js',
