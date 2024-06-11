@@ -1,6 +1,6 @@
 {
   "name": "coc-pretty-ts-errors",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "coc-pretty-ts-errors",
   "main": "lib/index.js",
   "engines": {
@@ -20,13 +20,7 @@
     "onLanguage:typescript.jsx",
     "onLanguage:typescriptreact",
     "onLanguage:jsx-tags",
-    "onLanguage:jsonc",
-    "onCommand:_typescript.configurePlugin",
-    "onCommand:tsserver.reloadProjects",
-    "onCommand:tsserver.goToProjectConfig",
-    "onCommand:tsserver.openTsServerLog",
-    "onCommand:tsserver.goToSourceDefinition",
-    "onCommand:tsserver.watchBuild"
+    "onLanguage:jsonc"
   ],
   "scripts": {
     "release": "git checkout master -- ./README.md ./ftdetect ./syntax && cp ./build/index.js ./lib && rm -rf ./build"
