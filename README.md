@@ -16,7 +16,7 @@ https://github.com/hexh250786313/coc-pretty-ts-errors/assets/26080416/cae19b18-e
   |`"prettytserr"` | <img width="333" alt="prettier" src="https://github.com/hexh250786313/coc-pretty-ts-errors/assets/26080416/2373045a-1010-456e-a050-de5d90980265"> | Use highlight group `PrettyTsErrorType` to highlight a single color. |
   | `"typescript"` | <img width="333" alt="ts" src="https://github.com/hexh250786313/coc-pretty-ts-errors/assets/26080416/4aa39849-da69-4300-93af-a3293bd86b15"> | Use ts syntax highlight. And for correct syntax highlight it will extra add a `"type Type = "` before type definition in code blocks. |
 
-  ※ Personally, I prefer to use prettytserr to highlight a single color, because it is more readable and does not affect the original code.
+  ※ Personally, I prefer to use `prettytserr` to highlight a single color, because it is more readable and does not affect the original code.
 
 ## Usage
 
@@ -29,6 +29,11 @@ Then run the following command:
 ```
 :CocInstall coc-pretty-ts-errors
 ```
+
+## Highlight Group
+
+- Use `CocMarkdownCode` to change the highlight group of the inline code.
+- Use `PrettyTsErrorType` to change the highlight group of the code block if you choose `prettytserr` in `pretty-ts-errors.codeBlockHighlightType`. `PrettyTsErrorType` defaults link to `CocMarkdownCode`.
 
 ## Configuration
 
@@ -55,7 +60,7 @@ Here are the available configuration options for coc-pretty-ts-errors:
 
 **A3**: Examples:
 
-- When using [coc-tsserver](/branches/test/README.md) , both `serverName` and `sourceName` are `"tsserver"`
+- When using [coc-tsserver](https://github.com/neoclide/coc-tsserver) , both `serverName` and `sourceName` are `"tsserver"`
 - When using a customized typescript `"languageserver"`, you need to modify `serverName` and `sourceName` to the corresponding values, such as [typescript-language-server](https://github.com/typescript-language-server/typescript-language-server)
 
   ```

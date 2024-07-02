@@ -1,6 +1,6 @@
 {
   "name": "coc-pretty-ts-errors",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "coc-pretty-ts-errors",
   "main": "lib/index.js",
   "engines": {
