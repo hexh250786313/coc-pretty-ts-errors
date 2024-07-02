@@ -45,7 +45,7 @@
   "license": "MIT",
   "dependencies": {
     "object-hash": "^3.0.0",
-    "pretty-ts-errors-markdown": "^0.0.1"
+    "pretty-ts-errors-markdown": "^0.0.8"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",

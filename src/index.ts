@@ -51,7 +51,7 @@ function replaceBackticksExceptCodeBlocks(text: string) {
   const replacedText = textWithPlaceholders
     .replace(/</g, '\\<')
     .replace(/>/g, '\\>')
-    .replace(backtickRegex, '\u001b[1;34m$1\u001b[0m')
+    .replace(backtickRegex, '\u001b[33m$1\u001b[0m')
 
   const finalText = replacedText.replace(/\0/g, () => codeBlocks.shift() || '')
 
