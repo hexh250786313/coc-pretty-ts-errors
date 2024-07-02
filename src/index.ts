@@ -241,6 +241,9 @@ export async function activate(context: ExtensionContext) {
         {
           language: 'jsonc',
         },
+        {
+          language: 'vue',
+        },
       ],
       {
         provideHover: (_doc, pos) => {

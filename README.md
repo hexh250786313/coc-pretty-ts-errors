@@ -48,38 +48,51 @@ Here are the available configuration options for coc-pretty-ts-errors:
 
 ## Q & A
 
-**Q1: `:CocList diagnostics` has additional error messages from `coc-pretty-ts-errors`.**
+- **Q: `:CocList diagnostics` has additional error messages from `coc-pretty-ts-errors`.**
 
-**A1**: When choosing to display error messages in the diagnostic floating window (mode `0` and `2`), it will cause `:CocList diagnostics` to have additional error messages from `coc-pretty-ts-errors`. These error messages are formatted copies of the original errors, and there is currently no good way to remove these messages (the same problem also occurs in the diagnostics virtual text at the end of the line). Therefore, I personally recommend using mode `1` with `:call CocActionAsync('doHover')`.
+- **A**: When choosing to display error messages in the diagnostic floating window (mode `0` and `2`), it will cause `:CocList diagnostics` to have additional error messages from `coc-pretty-ts-errors`. These error messages are formatted copies of the original errors, and there is currently no good way to remove these messages (the same problem also occurs in the diagnostics virtual text at the end of the line). Therefore, I personally recommend using mode `1` with `:call CocActionAsync('doHover')`.
 
-**Q2: The alignment of the markdown list format is a bit strange, and sometimes the indentation is too much.**
+- **Q: When to use `serverName` and `sourceName`**
 
-**A2**: `coc.nvim` issue: https://github.com/neoclide/coc.nvim/issues/4882
+- **A**: Examples:
 
-**Q3: When to use `serverName` and `sourceName`**
+  - When using [coc-tsserver](https://github.com/neoclide/coc-tsserver) , both `serverName` and `sourceName` are `"tsserver"`
+  - When using a customized typescript `"languageserver"`, you need to modify `serverName` and `sourceName` to the corresponding values, such as [typescript-language-server](https://github.com/typescript-language-server/typescript-language-server)
 
-**A3**: Examples:
+    ```
+    // coc-settings.json
+    "pretty-ts-errors.serverName": "my-tsserver",
+                                   ~~~~~~~~~~~~~          Your customized typescript language server name.
+    "pretty-ts-errors.sourceName": "typescript",
+                                   ~~~~~~~~~~~~~          You have to know the source name of your customized typescript language server from its documentation.
+                                                          Like coc-tsserver is "tsserver" and typescript-language-server is "typescript".
+    "languageserver": {
+        "my-tsserver": {
+        ~~~~~~~~~~~~~          `serverName` is from here.
+            "enable": true,
+            "command": "typescript-language-server",
+            "args": ["--stdio"],
 
-- When using [coc-tsserver](https://github.com/neoclide/coc-tsserver) , both `serverName` and `sourceName` are `"tsserver"`
-- When using a customized typescript `"languageserver"`, you need to modify `serverName` and `sourceName` to the corresponding values, such as [typescript-language-server](https://github.com/typescript-language-server/typescript-language-server)
+            ...
+            ...other options
 
-  ```
-  // coc-settings.json
-  "pretty-ts-errors.serverName": "my-tsserver",
-                                 ~~~~~~~~~~~~~          Your customized typescript language server name.
-  "pretty-ts-errors.sourceName": "typescript",
-                                 ~~~~~~~~~~~~~          You have to know the source name of your customized typescript language server from its documentation.
-                                                        Like coc-tsserver is "tsserver" and typescript-language-server is "typescript".
-  "languageserver": {
-      "my-tsserver": {
-      ~~~~~~~~~~~~~          `serverName` is from here.
-          "enable": true,
-          "command": "typescript-language-server",
-          "args": ["--stdio"],
+        }
+    }
+    ```
 
-          ...
-          ...other options
-
-      }
-  }
-  ```
+  - Some common typescript language server names:
+    - coc-tsserver:
+      - repository: https://github.com/neoclide/coc-tsserver
+      - `"pretty-ts-errors.serverName": "tsserver",` (Default)
+      - `"pretty-ts-errors.sourceName": "tsserver",` (Default)
+    - coc-volar:
+      - repository: https://github.com/yaegassy/coc-volar
+      - Options are same as coc-tsserver's ones. (coc-volar actually calls coc-tsserver)
+    - typescript-language-server:
+      - repository: https://github.com/typescript-language-server/typescript-language-server
+      - `"pretty-ts-errors.serverName": "xxxxxxxx",` (It depends on your configuration)
+      - `"pretty-ts-errors.sourceName": "typescript",`
+    - vtsls:
+      - repository: https://github.com/yioneko/vtsls
+      - `"pretty-ts-errors.serverName": "xxxxxxxx",` (It depends on your configuration)
+      - `"pretty-ts-errors.sourceName": "ts",`

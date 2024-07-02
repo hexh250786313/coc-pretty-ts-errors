@@ -20,7 +20,8 @@
     "onLanguage:typescript.jsx",
     "onLanguage:typescriptreact",
     "onLanguage:jsx-tags",
-    "onLanguage:jsonc"
+    "onLanguage:jsonc",
+    "onLanguage:vue"
   ],
   "scripts": {
     "clean": "npx rimraf build",
