@@ -45,13 +45,11 @@
   "author": "hexh <250786313@qq.com>",
   "license": "MIT",
   "dependencies": {
-    "object-hash": "^3.0.0",
     "pretty-ts-errors-markdown": "^0.0.8"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
     "@types/node": "^16.18.0",
-    "@types/object-hash": "^3.0.6",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "chokidar": "^3.5.3",
@@ -117,6 +115,11 @@
         "pretty-ts-errors.sourceName": {
           "type": "string",
           "description": "The name of the source. Same as `serverName` by default."
+        },
+        "pretty-ts-errors.experimental.filterOriginalTsErrors": {
+          "type": "boolean",
+          "default": false,
+          "description": "Experimental feature to filter original ts errors"
         }
       }
     }

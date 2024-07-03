@@ -10,13 +10,10 @@ import {
   services,
   workspace,
 } from 'coc.nvim'
-import objectHash from 'object-hash'
 import { formatDiagnostic } from 'pretty-ts-errors-markdown'
 
 const NAMESPACE = 'pretty-ts-errors'
 let TS_NAMESPACE = 'tsserver'
-
-type DiagnosticHash = string
 
 type formatOptions = {
   showLink: boolean
@@ -59,15 +56,15 @@ function replaceBackticksExceptCodeBlocks(text: string) {
 }
 
 const error = (str: string) => {
-  return `\u001b[1;31m${str}\u001b[0m`
+  return `\u001b[31m${str}\u001b[0m`
 }
 
 const warning = (str: string) => {
-  return `\u001b[1;32m${str}\u001b[0m`
+  return `\u001b[32m${str}\u001b[0m`
 }
 
 const info = (str: string) => {
-  return `\u001b[1;36m${str}\u001b[0m`
+  return `\u001b[36m${str}\u001b[0m`
 }
 
 const renderType = {
@@ -156,6 +153,10 @@ export async function activate(context: ExtensionContext) {
   }
   const modeObj = new Mode(mode)
   const ts = services.getService(TS_NAMESPACE)
+  const filterOriginalTsErrors = configuration.get(
+    'experimental.filterOriginalTsErrors',
+    false,
+  )
   if (!ts) {
     console.error(
       `Tsserver not found: serverName '${TS_NAMESPACE}' is not available.`,
@@ -164,48 +165,44 @@ export async function activate(context: ExtensionContext) {
   }
   ts.onServiceReady(() => {
     const collection = diagnosticManager.create(NAMESPACE)
-    diagnosticManager.onDidRefresh(async ({ diagnostics: all, uri }) => {
-      if (all.length === 0) {
-        lastPrettyDiagnostics[uri] = []
-        modeObj.showInDiagnostic() && collection.set(uri, [])
-        return
-      }
-      const tsDiagnosticsHashes: Array<DiagnosticHash> = []
-      const tsDiagnostics = all.filter((i) => {
-        if (i.source === sourceName) {
-          const hash = objectHash({
-            code: i.code,
-            range: i.range,
+    const tsDiagnosticsCollection =
+      diagnosticManager.getCollectionByName(serverName)
+    // const TS = ts as any
+    // TS?.clientHost?.client?.diagnosticsManager?._currentDiagnostics?.onDidDiagnosticsChange(
+    ;(tsDiagnosticsCollection as any)?.onDidDiagnosticsChange((uri: string) => {
+      const document = workspace.getDocument(uri)
+      if (document?.bufnr !== undefined) {
+        const diagnosticsBuffers = (diagnosticManager as any).buffers
+        const diagnosticsBuffer = diagnosticsBuffers.getItem(document?.bufnr)
+        if (diagnosticsBuffer) {
+          const diagnostics =
+            diagnosticManager.getDiagnostics(diagnosticsBuffer)
+          const tsDiagnostics = diagnostics[sourceName]
+          const formattedDiagnostics = format(tsDiagnostics, {
+            showLink,
+            codeBlockHighlightType,
           })
-          tsDiagnosticsHashes.push(hash)
-          return true
-        }
-      })
-      const existingHashes: Array<DiagnosticHash> = []
-      const existing = all.filter((i) => {
-        if (i.source === NAMESPACE) {
-          const hash = objectHash({
-            code: i.code,
-            range: i.range,
+          setTimeout(() => {
+            lastPrettyDiagnostics[uri] = [...formattedDiagnostics]
+            if (modeObj.showInDiagnostic()) {
+              if (filterOriginalTsErrors) {
+                //
+                // This part is experimental: hack from source coc.nvim code
+                // The purpose is to avoid triggering onDidDiagnosticsChange of tsDiagnosticsCollection, so as to avoid repeated updates
+                //
+                // hack `delete`: coc.nvim/src/diagnostic/collection.ts
+                // hack `onDidDiagnosticsChange`: coc.nvim/src/diagnostic/collection.ts
+                //
+                ;(tsDiagnosticsCollection as any).diagnosticsMap.delete(uri)
+                if (diagnosticsBuffer.config.autoRefresh) {
+                  void diagnosticsBuffer.update(serverName, [])
+                }
+              }
+              collection.set(uri, formattedDiagnostics)
+            }
           })
-          existingHashes.push(hash)
-          return true
         }
-      })
-      if (
-        tsDiagnostics.length === existing.length &&
-        tsDiagnosticsHashes.every((i) => existingHashes.includes(i))
-      ) {
-        return
       }
-      const formattedDiagnostics = format(tsDiagnostics, {
-        showLink,
-        codeBlockHighlightType,
-      })
-      setTimeout(() => {
-        lastPrettyDiagnostics[uri] = [...formattedDiagnostics]
-        modeObj.showInDiagnostic() && collection.set(uri, formattedDiagnostics)
-      })
     })
   })
 

@@ -45,6 +45,7 @@ Here are the available configuration options for coc-pretty-ts-errors:
 - `pretty-ts-errors.codeBlockHighlightType`: ("prettytserr" | "typescript", default: `"prettytserr"`) The way to highlight code block.
 - `pretty-ts-errors.serverName`: (String, default: `"tsserver"`) The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name.
 - `pretty-ts-errors.sourceName`: (String) The name of the source. Same as `serverName` by default.
+- `pretty-ts-errors.experimental.filterOriginalTsErrors`: (Boolean, default: `false`) **(Experimental)** Filter original (and ugly) ts errors in the diagnostic floating window.
 
 ## Q & A
 
