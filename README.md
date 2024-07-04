@@ -4,7 +4,7 @@ Inspired by https://github.com/yoavbls/pretty-ts-errors. This CoC extension is a
 
 Based on https://github.com/hexh250786313/pretty-ts-errors-markdown.
 
-https://github.com/hexh250786313/coc-pretty-ts-errors/assets/26080416/caaaabfd-c874-4272-a3ff-2eb594e5d904
+https://github.com/hexh250786313/coc-pretty-ts-errors/assets/26080416/8fdbf55f-0b4e-4421-b8bf-44d144230355
 
 ## Features
 
