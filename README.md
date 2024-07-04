@@ -4,7 +4,7 @@ Inspired by https://github.com/yoavbls/pretty-ts-errors. This CoC extension is a
 
 Based on https://github.com/hexh250786313/pretty-ts-errors-markdown.
 
-https://github.com/hexh250786313/coc-pretty-ts-errors/assets/26080416/cae19b18-e4cb-4fee-8739-caec87a588c6
+https://github.com/hexh250786313/coc-pretty-ts-errors/assets/26080416/8fdbf55f-0b4e-4421-b8bf-44d144230355
 
 ## Features
 
@@ -44,28 +44,21 @@ Here are the available configuration options for coc-pretty-ts-errors:
 - `pretty-ts-errors.mode`: (0 | 1 | 2, default: `1`) Display mode of the error message.
 - `pretty-ts-errors.codeBlockHighlightType`: ("prettytserr" | "typescript", default: `"prettytserr"`) The way to highlight code block.
 - `pretty-ts-errors.serverName`: (String, default: `"tsserver"`) The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name.
-- `pretty-ts-errors.sourceName`: (String) The name of the source. Same as `serverName` by default.
+- `pretty-ts-errors.experimental.filterOriginalTsErrors`: (Boolean, default: `false`) **(Experimental)** Filter original (and ugly) ts errors in the diagnostic floating window.
 
 ## Q & A
 
-- **Q: `:CocList diagnostics` has additional error messages from `coc-pretty-ts-errors`.**
-
-- **A**: When choosing to display error messages in the diagnostic floating window (mode `0` and `2`), it will cause `:CocList diagnostics` to have additional error messages from `coc-pretty-ts-errors`. These error messages are formatted copies of the original errors, and there is currently no good way to remove these messages (the same problem also occurs in the diagnostics virtual text at the end of the line). Therefore, I personally recommend using mode `1` with `:call CocActionAsync('doHover')`.
-
-- **Q: When to use `serverName` and `sourceName`**
+- **Q: When to use `serverName`**
 
 - **A**: Examples:
 
-  - When using [coc-tsserver](https://github.com/neoclide/coc-tsserver) , both `serverName` and `sourceName` are `"tsserver"`
-  - When using a customized typescript `"languageserver"`, you need to modify `serverName` and `sourceName` to the corresponding values, such as [typescript-language-server](https://github.com/typescript-language-server/typescript-language-server)
+  - When using [coc-tsserver](https://github.com/neoclide/coc-tsserver) , `serverName` is `"tsserver"`
+  - When using a customized typescript `"languageserver"`, you need to modify `serverName` to the corresponding values, such as [typescript-language-server](https://github.com/typescript-language-server/typescript-language-server)
 
     ```
     // coc-settings.json
     "pretty-ts-errors.serverName": "my-tsserver",
                                    ~~~~~~~~~~~~~          Your customized typescript language server name.
-    "pretty-ts-errors.sourceName": "typescript",
-                                   ~~~~~~~~~~~~~          You have to know the source name of your customized typescript language server from its documentation.
-                                                          Like coc-tsserver is "tsserver" and typescript-language-server is "typescript".
     "languageserver": {
         "my-tsserver": {
         ~~~~~~~~~~~~~          `serverName` is from here.
@@ -84,15 +77,12 @@ Here are the available configuration options for coc-pretty-ts-errors:
     - coc-tsserver:
       - repository: https://github.com/neoclide/coc-tsserver
       - `"pretty-ts-errors.serverName": "tsserver",` (Default)
-      - `"pretty-ts-errors.sourceName": "tsserver",` (Default)
     - coc-volar:
       - repository: https://github.com/yaegassy/coc-volar
       - Options are same as coc-tsserver's ones. (coc-volar actually calls coc-tsserver)
     - typescript-language-server:
       - repository: https://github.com/typescript-language-server/typescript-language-server
       - `"pretty-ts-errors.serverName": "xxxxxxxx",` (It depends on your configuration)
-      - `"pretty-ts-errors.sourceName": "typescript",`
     - vtsls:
       - repository: https://github.com/yioneko/vtsls
       - `"pretty-ts-errors.serverName": "xxxxxxxx",` (It depends on your configuration)
-      - `"pretty-ts-errors.sourceName": "ts",`
