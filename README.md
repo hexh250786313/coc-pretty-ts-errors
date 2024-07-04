@@ -35,6 +35,13 @@ Then run the following command:
 - Use `CocMarkdownCode` to change the highlight group of the inline code.
 - Use `PrettyTsErrorType` to change the highlight group of the code block if you choose `prettytserr` in `pretty-ts-errors.codeBlockHighlightType`. `PrettyTsErrorType` defaults link to `CocMarkdownCode`.
 
+<details>
+<summary>Click to see the different ways of highlighting</summary>
+<img src="https://github.com/yoavbls/pretty-ts-errors/assets/26080416/7ef4ccfb-5e5a-41d7-ae35-dbe7c9cb8d61" width="30%" alt="demo1" />
+<img src="https://github.com/yoavbls/pretty-ts-errors/assets/26080416/13913d30-3dd9-4fce-bf15-3df0c1e169c4" width="30%" alt="demo2" />
+<img src="https://github.com/yoavbls/pretty-ts-errors/assets/26080416/64480acb-c92e-4207-a5d7-eb07e1053411" width="30%" alt="demo3" />
+</details>
+
 ## Configuration
 
 Here are the available configuration options for coc-pretty-ts-errors:
