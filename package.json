@@ -81,7 +81,7 @@
         },
         "pretty-ts-errors.mode": {
           "type": "integer",
-          "default": 1,
+          "default": 2,
           "description": "Display mode of the error message.",
           "markdownEnumDescriptions": [
             "Diagnostic floating window",
@@ -112,13 +112,9 @@
           "default": "tsserver",
           "description": "The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name."
         },
-        "pretty-ts-errors.sourceName": {
-          "type": "string",
-          "description": "The name of the source. Same as `serverName` by default."
-        },
         "pretty-ts-errors.experimental.filterOriginalTsErrors": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Experimental feature to filter original ts errors"
         }
       }

@@ -146,7 +146,6 @@ export async function activate(context: ExtensionContext) {
     'prettytserr',
   )
   const serverName = configuration.get('serverName', TS_NAMESPACE)
-  const sourceName = configuration.get('sourceName', serverName) || serverName
   TS_NAMESPACE = serverName
   if (!isEnable) {
     return null
@@ -155,7 +154,7 @@ export async function activate(context: ExtensionContext) {
   const ts = services.getService(TS_NAMESPACE)
   const filterOriginalTsErrors = configuration.get(
     'experimental.filterOriginalTsErrors',
-    false,
+    true,
   )
   if (!ts) {
     console.error(
@@ -177,7 +176,7 @@ export async function activate(context: ExtensionContext) {
         if (diagnosticsBuffer) {
           const diagnostics =
             diagnosticManager.getDiagnostics(diagnosticsBuffer)
-          const tsDiagnostics = diagnostics[sourceName]
+          const tsDiagnostics = diagnostics[serverName]
           const formattedDiagnostics = format(tsDiagnostics, {
             showLink,
             codeBlockHighlightType,
