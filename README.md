@@ -32,8 +32,11 @@ Then run the following command:
 
 ## Highlight Group
 
-- Use `CocMarkdownCode` to change the highlight group of the inline code.
-- Use `PrettyTsErrorType` to change the highlight group of the code block if you choose `prettytserr` in `pretty-ts-errors.codeBlockHighlightType`. `PrettyTsErrorType` defaults link to `CocMarkdownCode`.
+- `CocMarkdownCode` is for inline code.
+- `CocMarkdownLink` is for file link.
+- `PrettyTsErrorType` is for the code block if you choose `prettytserr` in `pretty-ts-errors.codeBlockHighlightType`. `PrettyTsErrorType` defaults link to `CocMarkdownCode`.
+
+<img src="https://github.com/hexh250786313/coc-pretty-ts-errors/assets/26080416/22224233-eab2-4de4-ba84-9b5da0e97f34" alt="2024-07-09_10-48" width="25%" />
 
 <details>
 <summary>Click to see the different ways of highlighting</summary>
@@ -51,6 +54,7 @@ Here are the available configuration options for coc-pretty-ts-errors:
 - `pretty-ts-errors.mode`: (0 | 1 | 2, default: `1`) Display mode of the error message.
 - `pretty-ts-errors.codeBlockHighlightType`: ("prettytserr" | "typescript", default: `"prettytserr"`) The way to highlight code block.
 - `pretty-ts-errors.serverName`: (String, default: `"tsserver"`) The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name.
+- `pretty-ts-errors.separateDiagnostics`: (Boolean, default: `undefined`) Show related diagnostics or not. If it is `undefined`, it will use the value of `diagnostic.separateRelatedInformationAsDiagnostics`. (And `diagnostic.separateRelatedInformationAsDiagnostics` will respect the value of LS client options' `separateDiagnostics`)
 - `pretty-ts-errors.experimental.filterOriginalTsErrors`: (Boolean, default: `false`) **(Experimental)** Filter original (and ugly) ts errors in the diagnostic floating window.
 
 ## Q & A

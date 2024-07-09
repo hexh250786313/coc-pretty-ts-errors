@@ -45,7 +45,7 @@
   "author": "hexh <250786313@qq.com>",
   "license": "MIT",
   "dependencies": {
-    "pretty-ts-errors-markdown": "^0.0.8"
+    "pretty-ts-errors-markdown": "^0.0.9"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
@@ -111,6 +111,11 @@
           "type": "string",
           "default": "tsserver",
           "description": "The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name."
+        },
+        "pretty-ts-errors.separateDiagnostics": {
+          "type": "boolean",
+          "default": null,
+          "description": "Show related diagnostics or not"
         },
         "pretty-ts-errors.experimental.filterOriginalTsErrors": {
           "type": "boolean",
