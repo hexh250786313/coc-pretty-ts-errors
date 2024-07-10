@@ -1,6 +1,6 @@
 {
   "name": "coc-pretty-ts-errors",
-  "version": "0.0.23",
+  "version": "0.0.25",
   "description": "coc-pretty-ts-errors",
   "main": "lib/index.js",
   "engines": {
@@ -31,7 +31,7 @@
     "url": "git+https://github.com/hexh250786313/coc-pretty-ts-errors.git"
   },
   "author": "hexh <250786313@qq.com>",
-  "license": "MIT",
+  "license": "Anti 996",
   "dependencies": {
     "pretty-ts-errors-markdown": "~0.0.1"
   },
