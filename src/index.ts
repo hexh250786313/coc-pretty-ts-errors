@@ -110,7 +110,7 @@ const format = (_diagnostics: Diagnostic[], opt: FormatOptions) => {
           )
         }
         line = line.replace(
-          /(\['?)([^' ]+)('?.+?📄\])/g,
+          /(\['+)([^' ]+)('+.+?📄\])/g,
           (_match, _p1, target) => `[${target}]`,
         )
         if (opt.showLink === false) {
