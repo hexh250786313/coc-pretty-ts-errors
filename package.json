@@ -1,6 +1,6 @@
 {
   "name": "coc-pretty-ts-errors",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "coc-pretty-ts-errors",
   "main": "lib/index.js",
   "engines": {
@@ -24,14 +24,14 @@
     "onLanguage:vue"
   ],
   "scripts": {
-    "release": "git checkout master -- ./README.md ./ftdetect ./syntax && cp ./build/index.js ./lib && rm -rf ./build"
+    "release": "git checkout master -- ./README.md ./runtime && cp ./build/index.js ./lib && rm -rf ./build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hexh250786313/coc-pretty-ts-errors.git"
   },
   "author": "hexh <250786313@qq.com>",
-  "license": "Anti 996",
+  "license": "Anti-996",
   "dependencies": {
     "pretty-ts-errors-markdown": "~0.0.1"
   },
