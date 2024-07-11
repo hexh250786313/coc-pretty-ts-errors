@@ -11,7 +11,7 @@ import {
   workspace,
 } from 'coc.nvim'
 import { URI } from 'vscode-uri'
-import { basename } from 'path'
+import { basename, join } from 'path'
 import { formatDiagnostic } from 'pretty-ts-errors-markdown'
 
 const NAMESPACE = 'pretty-ts-errors'
@@ -27,14 +27,16 @@ async function registerRuntimepath(extensionPath: string) {
   const { nvim } = workspace
   const rtp = (await nvim.getOption('runtimepath')) as string
   const paths = rtp.split(',')
-  if (!paths.includes(extensionPath)) {
+  const targetPath = join(extensionPath, 'runtime')
+  if (!paths.includes(targetPath)) {
     await nvim.command(
-      `execute 'noa set rtp+='.fnameescape('${extensionPath.replace(
+      `execute 'noa set rtp+='.fnameescape('${targetPath.replace(
         /'/g,
         "''",
       )}')`,
     )
   }
+  await nvim.command(`call prettytserr#init()`)
 }
 
 /** Replace backticks in text, but not in code blocks */
@@ -187,6 +189,7 @@ export async function activate(context: ExtensionContext) {
     return null
   }
   ts.onServiceReady(() => {
+    void registerRuntimepath(context.extensionPath)
     if (separateDiagnostics === undefined) {
       // @ts-ignore
       separateDiagnostics = ts?.client?.clientOptions?.separateDiagnostics
@@ -233,8 +236,6 @@ export async function activate(context: ExtensionContext) {
       }
     })
   })
-
-  await registerRuntimepath(context.extensionPath)
 
   context.subscriptions.push(
     languages.registerHoverProvider(
