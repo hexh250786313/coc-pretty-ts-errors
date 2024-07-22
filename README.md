@@ -54,7 +54,6 @@ Here are the available configuration options for coc-pretty-ts-errors:
 - `pretty-ts-errors.mode`: (0 | 1 | 2, default: `1`) Display mode of the error message.
 - `pretty-ts-errors.codeBlockHighlightType`: ("prettytserr" | "typescript", default: `"prettytserr"`) The way to highlight code block.
 - `pretty-ts-errors.serverName`: (String, default: `"tsserver"`) The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name.
-- `pretty-ts-errors.separateDiagnostics`: (Boolean, default: `undefined`) Show related diagnostics or not. If it is `undefined`, it will use the value of `diagnostic.separateRelatedInformationAsDiagnostics`. (And `diagnostic.separateRelatedInformationAsDiagnostics` will respect the value of LS client options' `separateDiagnostics`)
 - `pretty-ts-errors.experimental.filterOriginalTsErrors`: (Boolean, default: `false`) **(Experimental)** Filter original (and ugly) ts errors in the diagnostic floating window.
 
 ## Q & A
