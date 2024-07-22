@@ -10,8 +10,7 @@ import {
   services,
   workspace,
 } from 'coc.nvim'
-import { URI } from 'vscode-uri'
-import { basename, join } from 'path'
+import { join } from 'path'
 import { formatDiagnostic } from 'pretty-ts-errors-markdown'
 
 const NAMESPACE = 'pretty-ts-errors'
@@ -20,7 +19,6 @@ let TS_NAMESPACE = 'tsserver'
 type FormatOptions = {
   showLink: boolean
   codeBlockHighlightType: 'prettytserr' | 'typescript'
-  separateDiagnostics?: boolean
 }
 
 async function registerRuntimepath(extensionPath: string) {
@@ -81,26 +79,7 @@ const renderType = {
 
 const format = (_diagnostics: Diagnostic[], opt: FormatOptions) => {
   const diagnostics = _diagnostics.map((_diagnostic) => {
-    let suffix = ''
     const diagnostic = Object.assign({}, _diagnostic)
-    if (diagnostic.message.includes('\n\nRelated diagnostics:')) {
-      const source = diagnostic.message.split('\n\nRelated diagnostics:')?.[0]
-      diagnostic.message = source
-    }
-    try {
-      if (opt.separateDiagnostics && diagnostic.relatedInformation?.length) {
-        suffix = `\n\n\u001b[35mRelated diagnostics:\u001b[0m\n`
-        for (const info of diagnostic.relatedInformation) {
-          const path = URI.parse(info.location.uri).fsPath
-          const name = basename(path)
-          const line = info.location.range.start.line + 1
-          const column = info.location.range.start.character + 1
-          suffix = `${suffix}\n  - [${name}#${line},${column}](${path}): ${info.message}`
-        }
-      }
-    } catch (e) {
-      // do nothing...
-    }
     const formatted = replaceBackticksExceptCodeBlocks(
       formatDiagnostic(diagnostic),
     )
@@ -111,9 +90,13 @@ const format = (_diagnostics: Diagnostic[], opt: FormatOptions) => {
             line.substring(3, line.length),
           )
         }
+        // line = line.replace(
+        //   /(\['+)([^' ]+)('+.+?📄\])/g,
+        //   (_match, _p1, target) => `[${target}]`,
+        // )
         line = line.replace(
-          /(\['+)([^' ]+)('+.+?📄\])/g,
-          (_match, _p1, target) => `[${target}]`,
+          /(\['+)([^' ]+)('+.+?📄\])\(.+?\)/g,
+          (_match, _p1, target) => `\u001b[34m${target}\u001b[0m`,
         )
         if (opt.showLink === false) {
           line = line.replace(/\[(🔗|🌐)\]\(.*\)/g, '')
@@ -133,7 +116,7 @@ const format = (_diagnostics: Diagnostic[], opt: FormatOptions) => {
       .join('\n')
     return {
       ...diagnostic,
-      message: `${formatted}${suffix}\n\n`,
+      message: `${formatted}\n\n`,
       filetype: 'markdown',
       source: NAMESPACE,
     }
@@ -171,7 +154,6 @@ export async function activate(context: ExtensionContext) {
     'prettytserr',
   )
   const serverName = configuration.get('serverName', TS_NAMESPACE)
-  let separateDiagnostics = configuration.get('separateDiagnostics', undefined)
   TS_NAMESPACE = serverName
   if (!isEnable) {
     return null
@@ -190,10 +172,6 @@ export async function activate(context: ExtensionContext) {
   }
   ts.onServiceReady(() => {
     void registerRuntimepath(context.extensionPath)
-    if (separateDiagnostics === undefined) {
-      // @ts-ignore
-      separateDiagnostics = ts?.client?.clientOptions?.separateDiagnostics
-    }
     const collection = diagnosticManager.create(NAMESPACE)
     const tsDiagnosticsCollection =
       diagnosticManager.getCollectionByName(serverName)
@@ -207,11 +185,12 @@ export async function activate(context: ExtensionContext) {
         if (diagnosticsBuffer) {
           const diagnostics =
             diagnosticManager.getDiagnostics(diagnosticsBuffer)
+          // @ts-ignore
+          // console.log(diagnosticsBuffer?._config)
           const tsDiagnostics = diagnostics[serverName]
           const formattedDiagnostics = format(tsDiagnostics, {
             showLink,
             codeBlockHighlightType,
-            separateDiagnostics,
           })
           setTimeout(() => {
             lastPrettyDiagnostics[uri] = [...formattedDiagnostics]

@@ -112,11 +112,6 @@
           "default": "tsserver",
           "description": "The name of the language server. Set it to 'tsserver' if youse coc-tsserver. Otherwise, set it to your customized typescript language server name."
         },
-        "pretty-ts-errors.separateDiagnostics": {
-          "type": "boolean",
-          "default": null,
-          "description": "Show related diagnostics or not"
-        },
         "pretty-ts-errors.experimental.filterOriginalTsErrors": {
           "type": "boolean",
           "default": true,
