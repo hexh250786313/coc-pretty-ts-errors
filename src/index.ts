@@ -79,49 +79,53 @@ const renderType = {
 
 const format = (_diagnostics: Diagnostic[], opt: FormatOptions) => {
   const diagnostics = _diagnostics.map((_diagnostic) => {
-    const diagnostic = Object.assign({}, _diagnostic)
-    const formatted = replaceBackticksExceptCodeBlocks(
-      formatDiagnostic(diagnostic),
-    )
-      .split('\n')
-      .map((line, index) => {
-        if (index === 0) {
-          line = renderType[diagnostic.severity || DiagnosticSeverity.Error](
-            line.substring(3, line.length),
-          )
-        }
-        // line = line.replace(
-        //   /(\['+)([^' ]+)('+.+?📄\])/g,
-        //   (_match, _p1, target) => `[${target}]`,
-        // )
-        line = line.replace(
-          /(\['+)([^' ]+)('+.+?📄\])\(.+?\)/g,
-          (_match, _p1, target) => `\u001b[34m${target}\u001b[0m`,
-        )
-        if (opt.showLink === false) {
-          line = line.replace(/\[(🔗|🌐)\]\(.*\)/g, '')
-        }
-        if (opt.codeBlockHighlightType === 'prettytserr') {
-          line = line.replace(/(?<=(^\s*```))typescript/, 'prettytserr')
-        } else {
-          const match = line.match(/^(\s*)```typescript.*/)
-          const spaceCount = match?.[1].length || 0
+    try {
+      const diagnostic = Object.assign({}, _diagnostic)
+      const formatted = replaceBackticksExceptCodeBlocks(
+        formatDiagnostic(diagnostic),
+      )
+        .split('\n')
+        .map((line, index) => {
+          if (index === 0) {
+            line = renderType[diagnostic.severity || DiagnosticSeverity.Error](
+              line.substring(3, line.length),
+            )
+          }
+          // line = line.replace(
+          //   /(\['+)([^' ]+)('+.+?📄\])/g,
+          //   (_match, _p1, target) => `[${target}]`,
+          // )
           line = line.replace(
-            /(?<=(^\s*```))typescript/,
-            `typescript\n${'\u0020'.repeat(spaceCount)}type Type =`,
+            /(\['+)([^' ]+)('+.+?📄\])\(.+?\)/g,
+            (_match, _p1, target) => `\u001b[34m${target}\u001b[0m`,
           )
-        }
-        return line
-      })
-      .join('\n')
-    return {
-      ...diagnostic,
-      message: `${formatted}\n\n`,
-      filetype: 'markdown',
-      source: NAMESPACE,
+          if (opt.showLink === false) {
+            line = line.replace(/\[(🔗|🌐)\]\(.*\)/g, '')
+          }
+          if (opt.codeBlockHighlightType === 'prettytserr') {
+            line = line.replace(/(?<=(^\s*```))typescript/, 'prettytserr')
+          } else {
+            const match = line.match(/^(\s*)```typescript.*/)
+            const spaceCount = match?.[1].length || 0
+            line = line.replace(
+              /(?<=(^\s*```))typescript/,
+              `typescript\n${'\u0020'.repeat(spaceCount)}type Type =`,
+            )
+          }
+          return line
+        })
+        .join('\n')
+      return {
+        ...diagnostic,
+        message: `${formatted}\n\n`,
+        filetype: 'markdown',
+        source: NAMESPACE,
+      }
+    } catch (e) {
+      return _diagnostic
     }
   })
-  return diagnostics
+  return diagnostics.filter(Boolean)
 }
 
 const lastPrettyDiagnostics: Record<string, Diagnostic[]> = {}

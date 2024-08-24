@@ -45,7 +45,7 @@
   "author": "hexh <250786313@qq.com>",
   "license": "Anti-996",
   "dependencies": {
-    "pretty-ts-errors-markdown": "^0.0.9"
+    "pretty-ts-errors-markdown": "^0.0.12"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
