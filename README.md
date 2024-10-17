@@ -96,3 +96,7 @@ Here are the available configuration options for coc-pretty-ts-errors:
     - vtsls:
       - repository: https://github.com/yioneko/vtsls
       - `"pretty-ts-errors.serverName": "xxxxxxxx",` (It depends on your configuration)
+
+- **Q: The plugin is not working after executing `:CocCommand tsserver.restart`**
+
+- **A**: The plugin cannot listen to the `restart` event of the client, which causes it to fail to re-listen to the `onDidDiagnosticsChange` of the new client instance, so it cannot automatically restore the plugin function. The solution is to restart nvim/vim or manually execute `:CocRestart`.

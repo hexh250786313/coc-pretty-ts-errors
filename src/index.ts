@@ -2,9 +2,11 @@ import {
   Diagnostic,
   DiagnosticSeverity,
   ExtensionContext,
+  IServiceProvider,
   MarkedString,
   Position,
   Range,
+  ServiceStat,
   diagnosticManager,
   languages,
   services,
@@ -12,6 +14,8 @@ import {
 } from 'coc.nvim'
 import { join } from 'path'
 import { formatDiagnostic } from 'pretty-ts-errors-markdown'
+
+let ts: IServiceProvider | null = null
 
 const NAMESPACE = 'pretty-ts-errors'
 let TS_NAMESPACE = 'tsserver'
@@ -158,23 +162,35 @@ export async function activate(context: ExtensionContext) {
     'prettytserr',
   )
   const serverName = configuration.get('serverName', TS_NAMESPACE)
+  const filterOriginalTsErrors = configuration.get(
+    'experimental.filterOriginalTsErrors',
+    true,
+  )
   TS_NAMESPACE = serverName
   if (!isEnable) {
     return null
   }
   const modeObj = new Mode(mode)
-  const ts = services.getService(TS_NAMESPACE)
-  const filterOriginalTsErrors = configuration.get(
-    'experimental.filterOriginalTsErrors',
-    true,
-  )
-  if (!ts) {
-    console.error(
-      `Tsserver not found: serverName '${TS_NAMESPACE}' is not available.`,
-    )
-    return null
-  }
-  ts.onServiceReady(() => {
+
+  diagnosticManager.onDidRefresh(() => {
+    const _ts = services.getService(TS_NAMESPACE)
+    if (!_ts) {
+      console.warn(
+        `Tsserver not found: serverName '${TS_NAMESPACE}' is not available.`,
+      )
+      return null
+    }
+    if (_ts !== ts) {
+      ts = _ts
+      if (ts.state === ServiceStat.Running) {
+        start()
+      } else {
+        ts.onServiceReady(start)
+      }
+    }
+  })
+
+  const start = () => {
     void registerRuntimepath(context.extensionPath)
     const collection = diagnosticManager.create(NAMESPACE)
     const tsDiagnosticsCollection =
@@ -218,7 +234,7 @@ export async function activate(context: ExtensionContext) {
         }
       }
     })
-  })
+  }
 
   context.subscriptions.push(
     languages.registerHoverProvider(
