@@ -1,6 +1,6 @@
 {
   "name": "coc-pretty-ts-errors",
-  "version": "0.0.1",
+  "version": "0.0.0-dev",
   "description": "coc-pretty-ts-errors",
   "main": "build/index.js",
   "engines": {
@@ -45,7 +45,7 @@
   "author": "hexh <250786313@qq.com>",
   "license": "Anti-996",
   "dependencies": {
-    "pretty-ts-errors-markdown": "^0.0.12"
+    "pretty-ts-errors-markdown": "^0.0.14"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",

@@ -195,9 +195,8 @@ export async function activate(context: ExtensionContext) {
     const collection = diagnosticManager.create(NAMESPACE)
     const tsDiagnosticsCollection =
       diagnosticManager.getCollectionByName(serverName)
-    // const TS = ts as any
-    // TS?.clientHost?.client?.diagnosticsManager?._currentDiagnostics?.onDidDiagnosticsChange(
-    ;(tsDiagnosticsCollection as any)?.onDidDiagnosticsChange((uri: string) => {
+
+    const handleDidDiagnosticsChange = (uri: string) => {
       const document = workspace.getDocument(uri)
       if (document?.bufnr !== undefined) {
         const diagnosticsBuffers = (diagnosticManager as any).buffers
@@ -233,7 +232,21 @@ export async function activate(context: ExtensionContext) {
           })
         }
       }
+    }
+
+    // There may already be diagnostics when initializing, trigger it here
+    const diagnosticsMap = (tsDiagnosticsCollection as any)?.diagnosticsMap
+    diagnosticsMap?.forEach((diagnostics: Diagnostic[], uri: string) => {
+      diagnostics.forEach(() => {
+        handleDidDiagnosticsChange(uri)
+      })
     })
+
+    // const TS = ts as any
+    // TS?.clientHost?.client?.diagnosticsManager?._currentDiagnostics?.onDidDiagnosticsChange(
+    ;(tsDiagnosticsCollection as any)?.onDidDiagnosticsChange(
+      handleDidDiagnosticsChange,
+    )
   }
 
   context.subscriptions.push(
